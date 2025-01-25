@@ -30,37 +30,61 @@ typedef struct{
 int main(){
     p Player1 = {1,1};
     p Player2 = {1,1};
-    int attack;
-    int attackingHand;
 
     return 0;
 
 }
 
-int PlayerInteraction(p Player1, p Player2, int attack, int attackingHand){
+int PlayerInteraction(p Player1, p Player2){
+    int hand;
     printf("What hand do you want to attack? (1: right, 2: left)");
-    scanf("%i", attack);
-    HandValidation(Player2, attack);
+    scanf("%i", hand);
+    HandValidation(Player2, hand);
 
     printf("With what hand do you want to attack? (1: right, 2: left)");
-    scanf("%i", attackingHand);
-    
-
-
+    scanf("%i", hand);
+    HandValidation(Player1, hand);
 }
 
-bool HandValidation(p Player,int attack){
-    while(attack == 1){
+bool HandValidation(p Player,int hand){
+    while(hand == 1){
         while(Player.right == 5){
             printf("Invalid Move");
-            scanf("%i", attack);
+            scanf("%i", hand);
         }
     }
-    while(attack == 2){
+    while(hand == 2){
         while(Player.left == 5){
             printf("Invalid Move");
-            scanf("%i", attack);
+            scanf("%i", hand);
         }
     }
+    hand = 0;
     return true;
+}
+
+bool CheckLostGame(p Player){
+    if(Player.left == 5 && Player.right == 5){
+        return true;
+    }
+    return false;
+}
+
+void GameLoop(p Player1, p Player2, int hand){
+    for(int i = 0; i<=20; i++){
+        if(i>=4){
+            if(CheckLostGame(Player1)){
+                printf("Player 2 won!");
+            }
+            else if(CheckLostGame(Player2)){
+                printf("Player 1 won!");
+            }
+        }
+        if(i%2==0){
+            PlayerInteraction(Player1,Player2);
+        }
+        else{
+            PlayerInteraction(Player2,Player1);
+        }
+    }
 }
