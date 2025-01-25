@@ -2,5 +2,5 @@
     "files.associations": {
         "string.h": "c",
         "stdio.h": "c"
-    }
+    },
 }
