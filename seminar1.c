@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-
+#include <stdbool.h>
 /*
 4. Alice and Bob are playing an arithmetical game which works as follows:
     1.  The game starts with exactly one finger UP in each hand (left and right for Alice and Bob).
@@ -28,21 +28,39 @@ typedef struct{
 } p;
 
 int main(){
-    p Game[2] = {1,1};
+    p Player1 = {1,1};
+    p Player2 = {1,1};
     int attack;
     int attackingHand;
-    
+
     return 0;
 
 }
 
-int PlayerInteraction(p Player1[], p Player2[], int attack, int attackingHand){
+int PlayerInteraction(p Player1, p Player2, int attack, int attackingHand){
     printf("What hand do you want to attack? (1: right, 2: left)");
     scanf("%i", attack);
-        while(Player2[attack-1] == 5){
-            printf("Invalid Move");
-    }
-    printf("With what hand do you want to attack? (1: right, 2: left)");
-    scanf("2%i", attackingHand);
+    HandValidation(Player2, attack);
 
+    printf("With what hand do you want to attack? (1: right, 2: left)");
+    scanf("%i", attackingHand);
+    
+
+
+}
+
+bool HandValidation(p Player,int attack){
+    while(attack == 1){
+        while(Player.right == 5){
+            printf("Invalid Move");
+            scanf("%i", attack);
+        }
+    }
+    while(attack == 2){
+        while(Player.left == 5){
+            printf("Invalid Move");
+            scanf("%i", attack);
+        }
+    }
+    return true;
 }
