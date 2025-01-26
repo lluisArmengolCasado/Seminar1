@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <stdio.h>  
 #include <string.h>
 #include <stdbool.h>
 /*
@@ -22,43 +22,43 @@
     • T ∈ [4, 20]
     • The plays are always valid, and hands with 5 fingers UP are not playable.
 */
+
+// Sructure to store the state of a player's hands
 typedef struct{
     int left;
     int right;
 } p;
 
+// Structure to store the move details (attacker and target hand)
 typedef struct{
     int attackedHand;
     int attackingHand;
 } m;
-// Function prototypes
-void PlayerInteraction(p *Player1, p *Player2, m *move);
-bool CheckLostGame(p *Player, int i);
-void PerformAddition(p *Player1, p *Player2, m *move);
-void GameLoop(p *Player1, p *Player2, m *move);
-bool AttackedHandValidation(p *Player, m *move);
-bool AttackingHandValidation(p *Player, m *move);
 
-
+// Function to handle player interaction and gather the attacking and attacked hand
 void PlayerInteraction(p *Player1, p *Player2, m *move){
+    // Display the current state of Player 1's hands
     printf("Your current situation: \n");
     printf("       Your hands: Right - %i and Left - %i \n" , (*Player1).right, (*Player1).left);
     
+    // Display the current state of Player 2's hands
     printf("His current situation: \n");
     printf("       His/Her/Their hands: Right - %i and Left - %i \n" , (*Player2).right, (*Player2).left);
 
-
+    // Ask Player 1 which hand they want to attack with
     printf("With what hand do you want to attack? (1: right, 2: left) \n");
     scanf("%i", &(*move).attackingHand);
     AttackingHandValidation(&(*Player1), &(*move)); 
- 
+    
+    // Ask Player 1 which hand they want to attack
     printf("What hand do you want to attack? (1: right, 2: left) \n");
     scanf("%i", &(*move).attackedHand);
-    AttackedHandValidation(&(*Player2), &(*move));
-    
+    AttackedHandValidation(&(*Player2), &(*move)); 
 }
 
+// Function to validate the attacked hand selection
 bool AttackedHandValidation(p *Player, m *move) {
+    // Ensure the selected hand is not already unplayable
     while ((*move).attackedHand == 1 && (*Player).right == 5) {
         printf("Invalid Move: His/Her/Their Right hand is not playable. Choose another hand.\n");
         scanf("%i", &(*move).attackedHand);
@@ -69,7 +69,9 @@ bool AttackedHandValidation(p *Player, m *move) {
     }
 }
 
+// Function to validate the attacking hand selection
 bool AttackingHandValidation(p *Player, m *move) {
+    // Ensure the selected hand is not already unplayable
     while ((*move).attackingHand == 1 && (*Player).right == 5) {
         printf("Invalid Move: Your Right hand is not playable. Choose another hand.\n");
         scanf("%i", &(*move).attackingHand);
@@ -82,16 +84,18 @@ bool AttackingHandValidation(p *Player, m *move) {
 }
     
 
-
+// Function to check if a player has lost the game
 bool CheckLostGame(p *Player, int i){
+     // A player loses if both hands have 5 fingers
     if((*Player).left == 5 && (*Player).right == 5){
             return true;
         }
     return false;
 }
 
+// Function to perform the addition of fingers based on the move
 void PerformAddition(p *Player1, p *Player2, m *move){
-    if((*move).attackingHand == 1){
+    if((*move).attackingHand == 1){ // Right hand attacks
                 if((*move).attackedHand == 1){
                     (*Player2).right = (*Player1).right + (*Player2).right;
                 }
@@ -99,7 +103,7 @@ void PerformAddition(p *Player1, p *Player2, m *move){
                     (*Player2).left = (*Player1).right + (*Player2).left;
                 }
             }
-            else if((*move).attackingHand == 2){
+            else if((*move).attackingHand == 2){ // Left hand attacks
                 if((*move).attackedHand == 1){
                     (*Player2).right = (*Player1).left + (*Player2).right;
                 }
@@ -107,7 +111,8 @@ void PerformAddition(p *Player1, p *Player2, m *move){
                     (*Player2).left = (*Player1).left + (*Player2).left;
                 }
             }
-            
+
+            // Reduce fingers to modulo 5 if they exceed 5
             if((*Player2).right>5){
                 (*Player2).right -= 5;
             }
@@ -116,9 +121,10 @@ void PerformAddition(p *Player1, p *Player2, m *move){
             }
 }
 
+// Main game loop function
 void GameLoop(p *Player1, p *Player2, m *move){
     for(int i = 0; i<=20; i++){
-        if(i%2==0){
+        if(i%2==0){ // Player 1's turn
             printf("PLAYER 1 TURN \n ===================== \n");
             PlayerInteraction(&(*Player1), &(*Player2), &(*move));
             PerformAddition(&(*Player1), &(*Player2), &(*move));
@@ -127,7 +133,7 @@ void GameLoop(p *Player1, p *Player2, m *move){
                 break;
             }
         }
-        else{
+        else{ // Player 2's turn
             printf("PLAYER 2 TURN \n ===================== \n");
             PlayerInteraction(&(*Player2), &(*Player1), &(*move));
             PerformAddition(&(*Player2), &(*Player1), &(*move));
@@ -136,16 +142,20 @@ void GameLoop(p *Player1, p *Player2, m *move){
                 break;
             }
         }
+        // Reset the move variables for the next turn
        (*move).attackedHand = 0;
        (*move).attackingHand = 0;
     }
+
+    printf("No one has won the game");
 }
 
+// Main function to initialize players and start the game loop
 int main(){
-    p Player1 = {1,1};
-    p Player2 = {1,1};
-    m move;
-    GameLoop(&Player1, &Player2, &move);
+    p Player1 = {1,1};  // Initialize Player 1 with 1 finger on each hand
+    p Player2 = {1,1};  // Initialize Player 2 with 1 finger on each hand
+    m move;             // Move structure to store attack details
+    GameLoop(&Player1, &Player2, &move);    // Start the game loop
     return 0;
 
 }
