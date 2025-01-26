@@ -31,93 +31,121 @@ typedef struct{
     int attackedHand;
     int attackingHand;
 } m;
+// Function prototypes
+void PlayerInteraction(p *Player1, p *Player2, m *move);
+bool CheckLostGame(p *Player, int i);
+void PerformAddition(p *Player1, p *Player2, m *move);
+void GameLoop(p *Player1, p *Player2, m *move);
+bool AttackedHandValidation(p *Player, m *move);
+bool AttackingHandValidation(p *Player, m *move);
+
+
+void PlayerInteraction(p *Player1, p *Player2, m *move){
+    printf("Your current situation: \n");
+    printf("       Your hands: Right - %i and Left - %i \n" , (*Player1).right, (*Player1).left);
+    
+    printf("His current situation: \n");
+    printf("       His/Her/Their hands: Right - %i and Left - %i \n" , (*Player2).right, (*Player2).left);
+
+
+    printf("With what hand do you want to attack? (1: right, 2: left) \n");
+    scanf("%i", &(*move).attackingHand);
+    AttackingHandValidation(&(*Player1), &(*move)); 
+ 
+    printf("What hand do you want to attack? (1: right, 2: left) \n");
+    scanf("%i", &(*move).attackedHand);
+    AttackedHandValidation(&(*Player2), &(*move));
+    
+}
+
+bool AttackedHandValidation(p *Player, m *move) {
+    while ((*move).attackedHand == 1 && (*Player).right == 5) {
+        printf("Invalid Move: His/Her/Their Right hand is not playable. Choose another hand.\n");
+        scanf("%i", &(*move).attackedHand);
+    } 
+    while ((*move).attackedHand == 2 && (*Player).left == 5) {
+        printf("Invalid Move: His/Her/Their Left hand is not playable. Choose another hand.\n");
+        scanf("%i", &(*move).attackedHand);
+    }
+}
+
+bool AttackingHandValidation(p *Player, m *move) {
+    while ((*move).attackingHand == 1 && (*Player).right == 5) {
+        printf("Invalid Move: Your Right hand is not playable. Choose another hand.\n");
+        scanf("%i", &(*move).attackingHand);
+    } 
+    while((*move).attackingHand == 2 && (*Player).left == 5) {
+        printf("Invalid Move: Your Left hand is not playable. Choose another hand.\n");
+        scanf("%i", &(*move).attackingHand);
+    return true;
+    }
+}
+    
+
+
+bool CheckLostGame(p *Player, int i){
+    if((*Player).left == 5 && (*Player).right == 5){
+            return true;
+        }
+    return false;
+}
+
+void PerformAddition(p *Player1, p *Player2, m *move){
+    if((*move).attackingHand == 1){
+                if((*move).attackedHand == 1){
+                    (*Player2).right = (*Player1).right + (*Player2).right;
+                }
+                else if((*move).attackedHand == 2){
+                    (*Player2).left = (*Player1).right + (*Player2).left;
+                }
+            }
+            else if((*move).attackingHand == 2){
+                if((*move).attackedHand == 1){
+                    (*Player2).right = (*Player1).left + (*Player2).right;
+                }
+                else if((*move).attackedHand == 2){
+                    (*Player2).left = (*Player1).left + (*Player2).left;
+                }
+            }
+            
+            if((*Player2).right>5){
+                (*Player2).right -= 5;
+            }
+            else if((*Player2).left>5){
+                (*Player2).left -= 5;
+            }
+}
+
+void GameLoop(p *Player1, p *Player2, m *move){
+    for(int i = 0; i<=20; i++){
+        if(i%2==0){
+            printf("PLAYER 1 TURN \n ===================== \n");
+            PlayerInteraction(&(*Player1), &(*Player2), &(*move));
+            PerformAddition(&(*Player1), &(*Player2), &(*move));
+            if(CheckLostGame(&(*Player2), i) == true){
+                printf("Player 1 won!");
+                break;
+            }
+        }
+        else{
+            printf("PLAYER 2 TURN \n ===================== \n");
+            PlayerInteraction(&(*Player2), &(*Player1), &(*move));
+            PerformAddition(&(*Player2), &(*Player1), &(*move));
+            if(CheckLostGame(&(*Player1),i) == true){
+                printf("Player 2 won!");
+                break;
+            }
+        }
+       (*move).attackedHand = 0;
+       (*move).attackingHand = 0;
+    }
+}
 
 int main(){
     p Player1 = {1,1};
     p Player2 = {1,1};
     m move;
+    GameLoop(&Player1, &Player2, &move);
     return 0;
-    GameLoop(Player1, Player2, move);
-}
 
-int PlayerInteraction(p Player1, p Player2, m move){
-    printf("What hand do you want to attack? (1: right, 2: left)");
-    scanf("%i", move.attackedHand);
-    HandValidation(Player2, move);
-
-    printf("With what hand do you want to attack? (1: right, 2: left)");
-    scanf("%i", move.attackingHand);
-    HandValidation(Player1, move);
-
-}
-
-bool HandValidation(p Player, m move){
-    if(move.attackedHand == 1){
-        while(Player.right == 5){
-            printf("Invalid Move");
-            scanf("%i", move.attackedHand);
-        }
-    }
-    while(move.attackingHand == 2){
-        while(Player.left == 5){
-            printf("Invalid Move");
-            scanf("%i", move.attackingHand);
-        }
-    }
-    return true;
-}
-
-bool CheckLostGame(p Player, int i){
-    if(i>=4){
-        if(Player.left == 5 && Player.right == 5){
-            return true;
-        }
-    }
-    return false;
-}
-
-void PerformAddition(p Player1, p Player2, m move){
-    if(move.attackingHand == 1){
-                if(move.attackedHand == 1){
-                    Player2.right = Player1.right + Player2.right;
-                }
-                else if(move.attackedHand == 2){
-                    Player2.left = Player1.right + Player2.left;
-                }
-            }
-            else if(move.attackingHand == 2){
-                if(move.attackedHand == 1){
-                    Player2.right = Player1.left + Player2.right;
-                }
-                else if(move.attackedHand == 2){
-                    Player2.left = Player1.left + Player2.left;
-                }
-            }
-            
-            if(Player2.right>5){
-                Player2.right -= 5;
-            }
-            else if(Player1.left>5){
-                Player2.left -= 5;
-            }
-}
-
-void GameLoop(p Player1, p Player2, m move){
-    for(int i = 0; i<=20; i++){
-        if(i%2==0){
-            PlayerInteraction(Player1,Player2, move);
-            PerformAddition(Player1, Player2, move);
-            if(CheckLostGame(Player2, i)){
-                printf("Player 1 won!");
-            }
-        }
-        else{
-            PlayerInteraction(Player2,Player1, move);
-            PerformAddition(Player2,Player1, move);
-            if(CheckLostGame(Player1,i)){
-                printf("Player 2 won!");
-            }
-        }
-        move = {0,0};
-    }
 }
