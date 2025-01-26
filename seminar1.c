@@ -35,6 +35,15 @@ typedef struct{
     int attackingHand;
 } m;
 
+// Function prototypes
+void PlayerInteraction(p *Player1, p *Player2, m *move);
+bool AttackedHandValidation(p *Player, m *move);
+bool AttackingHandValidation(p *Player, m *move);
+bool CheckLostGame(p *Player, int i);
+void PerformAddition(p *Player1, p *Player2, m *move);
+void GameLoop(p *Player1, p *Player2, m *move);
+
+
 // Function to handle player interaction and gather the attacking and attacked hand
 void PlayerInteraction(p *Player1, p *Player2, m *move){
     // Display the current state of Player 1's hands
