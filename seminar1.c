@@ -51,7 +51,7 @@ void PlayerInteraction(p *Player1, p *Player2, m *move){
     printf("       Your hands: Right - %i and Left - %i \n" , (*Player1).right, (*Player1).left);
     
     // Display the current state of Player 2's hands
-    printf("His current situation: \n");
+    printf("His/Her/Their current situation: \n");
     printf("       His/Her/Their hands: Right - %i and Left - %i \n" , (*Player2).right, (*Player2).left);
 
     // Ask Player 1 which hand they want to attack with
@@ -133,6 +133,7 @@ void PerformAddition(p *Player1, p *Player2, m *move){
 // Main game loop function
 void GameLoop(p *Player1, p *Player2, m *move){
     for(int i = 0; i<=20; i++){
+        printf("There are %i turns left \n", i);
         if(i%2==0){ // Player 1's turn
             printf("PLAYER 1 TURN \n ===================== \n");
             PlayerInteraction(&(*Player1), &(*Player2), &(*move));
